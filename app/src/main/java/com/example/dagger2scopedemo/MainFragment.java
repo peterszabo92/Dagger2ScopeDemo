@@ -39,6 +39,6 @@ public class MainFragment extends Fragment {
         super.onResume();
         appScoped = ((MainActivity) getActivity()).getAppComponent().getAppScoped();
         customComponent.inject(this);
-
+        customScoped.doLog();
     }
 }

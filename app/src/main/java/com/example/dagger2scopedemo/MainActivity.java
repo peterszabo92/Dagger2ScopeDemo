@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private AppComponent appComponent;
 
     private Fragment mainFragment;
+    private Fragment otherFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,20 +23,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mainFragment = Fragment.instantiate(this, MainFragment.class.getName());
+        otherFragment = Fragment.instantiate(this, OtherFragment.class.getName());
         appComponent = DaggerAppComponent.create();
 
     }
 
     private void addFragment() {
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.main_container, mainFragment, null)
+                .add(R.id.main_container, mainFragment, "main")
+                .commit();
+    }
+
+    private void replaceFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, otherFragment, "other")
+                .addToBackStack("main")
                 .commit();
     }
 
     private void removeFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .remove(mainFragment)
-                .commit();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("other");
+        if (fragment == null) {
+            fragment = getSupportFragmentManager().findFragmentByTag("main");
+        }
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
     }
 
     @OnClick(R.id.add)
@@ -46,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.remove)
     public void remove() {
         removeFragment();
+    }
+
+    @OnClick(R.id.replace)
+    public void replace() {
+        replaceFragment();
     }
 
     public AppComponent getAppComponent() {
