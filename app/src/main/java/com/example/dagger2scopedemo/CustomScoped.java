@@ -2,6 +2,7 @@ package com.example.dagger2scopedemo;
 
 import android.util.Log;
 
+@FragmentScope
 public class CustomScoped {
 
     public CustomScoped() {

@@ -17,6 +17,7 @@ public class MainFragment extends Fragment {
 
     private CustomComponent customComponent;
 
+    @Inject
     AppScoped appScoped;
 
     @Inject
@@ -31,13 +32,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        customComponent = DaggerCustomComponent.create();
+        customComponent = DaggerCustomComponent
+                .builder()
+                .appComponent(((MainActivity) getActivity()).getAppComponent())
+                .build();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        appScoped = ((MainActivity) getActivity()).getAppComponent().getAppScoped();
         customComponent.inject(this);
         customScoped.doLog();
     }
